@@ -1,0 +1,5 @@
+1.0.1:
+    - First version of TenancyTests
+    - create_posts_table.php
+    - test_posts_seeder.php
+    - create_entries_table.php
