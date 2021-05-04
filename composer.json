@@ -1,0 +1,8 @@
+{
+    "name": "gromit/oc-tenancytests-plugin",
+    "type": "october-plugin",
+    "description": "Tests for tenancy plugin",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}
