@@ -5,10 +5,14 @@ namespace GromIT\TenancyTests\Tests\DatabaseCreators;
 use GromIT\Tenancy\DatabaseCreators\MysqlDatabaseCreator;
 use GromIT\TenancyTests\Tests\TenancyPluginTestCase;
 
-class MysqlDatabaseManagerTest extends TenancyPluginTestCase
+class MysqlDatabaseCreatorTest extends TenancyPluginTestCase
 {
     public function testCreateDatabase(): void
     {
+        if (!$this->isEnabled()) {
+            self::markTestSkipped('current database driver != mysql');
+        }
+
         $manager = new MysqlDatabaseCreator();
 
         $dbName = 'testing__' . str_random();
@@ -22,6 +26,10 @@ class MysqlDatabaseManagerTest extends TenancyPluginTestCase
 
     public function testDropDatabase(): void
     {
+        if (!$this->isEnabled()) {
+            self::markTestSkipped('current database driver != mysql');
+        }
+
         $manager = new MysqlDatabaseCreator();
 
         $dbName = 'testing__' . str_random();
@@ -37,6 +45,10 @@ class MysqlDatabaseManagerTest extends TenancyPluginTestCase
 
     public function testDatabaseExists(): void
     {
+        if (!$this->isEnabled()) {
+            self::markTestSkipped('current database driver != mysql');
+        }
+
         $manager = new MysqlDatabaseCreator();
 
         $dbName = 'testing__' . str_random();
@@ -46,5 +58,14 @@ class MysqlDatabaseManagerTest extends TenancyPluginTestCase
         self::assertTrue($manager->databaseExists($dbName));
 
         $manager->dropDatabase($dbName);
+    }
+
+    private function isEnabled(): bool
+    {
+        $defaultConnection = config('database.default');
+
+        $driver = config("database.connections.$defaultConnection.driver");
+
+        return $driver === 'mysql';
     }
 }

@@ -27,26 +27,26 @@ class ChangeResourcesStorageTest extends TenancyPluginTestCase
 
     public function testChangesResourcesConfig(): void
     {
-        $defaultStorageConfig = config('cms.storage');
+        $defaultStorageConfig = config('system.storage');
 
         $task = new ChangeResourcesStorage();
         $task->makeCurrent($this->tenant);
 
-        $changedConfig = config('cms.storage');
+        $changedConfig = config('system.storage');
 
         self::assertNotEquals($defaultStorageConfig, $changedConfig);
 
-        self::assertEquals(config('cms.storage.media.disk'), $this->getTenantDiskName());
-        self::assertEquals(config('cms.storage.resized.disk'), $this->getTenantDiskName());
-        self::assertEquals(config('cms.storage.uploads.disk'), $this->getTenantDiskName());
+        self::assertEquals(config('system.storage.media.disk'), $this->getTenantDiskName());
+        self::assertEquals(config('system.storage.resized.disk'), $this->getTenantDiskName());
+        self::assertEquals(config('system.storage.uploads.disk'), $this->getTenantDiskName());
 
-        self::assertStringContainsString("/{$this->tenant->id}/", config('cms.storage.media.path'));
-        self::assertStringContainsString("/{$this->tenant->id}/", config('cms.storage.resized.path'));
-        self::assertStringContainsString("/{$this->tenant->id}/", config('cms.storage.uploads.path'));
+        self::assertStringContainsString("/{$this->tenant->id}/", config('system.storage.media.path'));
+        self::assertStringContainsString("/{$this->tenant->id}/", config('system.storage.resized.path'));
+        self::assertStringContainsString("/{$this->tenant->id}/", config('system.storage.uploads.path'));
 
         $task->forgetCurrent();
 
-        $restoredConfig = config('cms.storage');
+        $restoredConfig = config('system.storage');
 
         self::assertEquals($defaultStorageConfig, $restoredConfig);
     }

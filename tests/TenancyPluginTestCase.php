@@ -2,6 +2,8 @@
 
 namespace GromIT\TenancyTests\Tests;
 
+use GromIT\Tenancy\DatabaseCreators\MysqlDatabaseCreator;
+use GromIT\Tenancy\DatabaseCreators\SqliteDatabaseCreator;
 use PluginTestCase;
 use System\Classes\PluginManager;
 
@@ -27,6 +29,7 @@ class TenancyPluginTestCase extends PluginTestCase
         config([
             'database'                                      => config('testing.database'),
             'gromit.tenancy::database.tenant_aware_plugins' => ['GromIT.TenancyTests'],
+            'gromit.tenancy::database.database_creator'     => $this->getDatabaseCreatorClass(),
         ]);
     }
 
@@ -39,5 +42,20 @@ class TenancyPluginTestCase extends PluginTestCase
 
         // Ensure that plugins are registered again for the next test
         $pluginManager->unregisterAll();
+    }
+
+    private function getDatabaseCreatorClass()
+    {
+        $defaultConnection = config('database.default');
+        $driver            = config("database.connections.$defaultConnection.driver");
+
+        switch ($driver) {
+            case 'mysql':
+                return MysqlDatabaseCreator::class;
+            case 'sqlite':
+                return SqliteDatabaseCreator::class;
+            default:
+                return config('gromit.tenancy::database.database_creator');
+        }
     }
 }

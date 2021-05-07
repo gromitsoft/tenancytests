@@ -2,16 +2,17 @@
 
 namespace GromIT\TenancyTests\Tests\Tasks\CreateTenant;
 
-use Illuminate\Support\Facades\Event;
-use GromIT\Tenancy\DatabaseCreators\MysqlDatabaseCreator;
+use GromIT\Tenancy\Concerns\UsesTenancyConfig;
 use GromIT\Tenancy\Tasks\CreateTenant\CreateDatabase;
 use GromIT\Tenancy\Tasks\DeleteTenant\DeleteDatabase;
 use GromIT\TenancyTests\Tests\CreatesTenants;
 use GromIT\TenancyTests\Tests\TenancyPluginTestCase;
+use Illuminate\Support\Facades\Event;
 
 class CreateDatabaseTest extends TenancyPluginTestCase
 {
     use CreatesTenants;
+    use UsesTenancyConfig;
 
     /**
      * @var \GromIT\Tenancy\Models\Tenant
@@ -34,7 +35,7 @@ class CreateDatabaseTest extends TenancyPluginTestCase
 
         self::assertNotEmpty($this->tenant->database_name);
 
-        $dbCreator = new MysqlDatabaseCreator();
+        $dbCreator = $this->getDatabaseCreator();
 
         self::assertTrue($dbCreator->databaseExists($this->tenant->database_name));
 
